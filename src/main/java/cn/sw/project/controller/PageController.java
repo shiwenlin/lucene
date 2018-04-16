@@ -1,6 +1,8 @@
 package cn.sw.project.controller;
 
+import cn.sw.project.bean.Article;
 import cn.sw.project.bean.MyArticle;
+import cn.sw.project.service.ArticleService;
 import cn.sw.project.service.MyArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ public class PageController {
     @Autowired
     MyArticleService myArticleService;
 
+    @Autowired
+    ArticleService articleService;
 
     /**
      * 首页
@@ -51,13 +55,14 @@ public class PageController {
         /*
         首页加载普通文章
          */
-        hotParam.put("hot",0);
-        hotParam.put("showIndex",0);
-        List<MyArticle> otherArticle = myArticleService.selectMyArticleList(hotParam);
+        Map<String,Object> params = new HashMap<>();
+        params.put("start",0);
+        params.put("pageSize",10);
+        List<Article> articles = articleService.getArticleList(params);
 
         model.addAttribute("hotArticle",hotArticle);
         model.addAttribute("indexArticle",indexArticle);
-        model.addAttribute("otherArticle",otherArticle);
+        model.addAttribute("otherArticle",articles);
 
 
         return "new_index";

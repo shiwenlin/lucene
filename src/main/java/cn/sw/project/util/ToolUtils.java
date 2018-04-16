@@ -33,7 +33,7 @@ public class ToolUtils {
 	 */
 	public static Article documentToArticle(Document document){
 		Article article=new Article();
-		article.setId(Integer.valueOf(document.get("Id")));
+		article.setId(Long.valueOf(document.get("Id")));
 		article.setAuthor(document.get("author"));
 		article.setContent(document.get("content"));
 		article.setUrl(document.get("link"));

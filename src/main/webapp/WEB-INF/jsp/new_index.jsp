@@ -27,8 +27,8 @@
 
     <!-- CSS
   ================================================== -->
-    <link href="http://mat1.gtimg.com/www/base/base.css" rel="stylesheet" type="text/css">
-    <link href="http://mat1.gtimg.com/news/skeetershi/world/css/index.min2.css" rel="stylesheet" type="text/css">
+
+
 
     <link rel="stylesheet" href="${PageContext.request.contextPath}/css/zerogrid.css">
     <link rel="stylesheet" href="${PageContext.request.contextPath}/css/style.css">
@@ -36,6 +36,13 @@
     <link rel="stylesheet" href="${PageContext.request.contextPath}/css/responsiveslides.css">
     <link href="${PageContext.request.contextPath}/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+
+
+    <link href="http://mat1.gtimg.com/www/base/base.css" rel="stylesheet" type="text/css">
+    <link href="http://mat1.gtimg.com/news/skeetershi/world/css/index.min2.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="//vm.gtimg.cn/c/=/tencentvideo/txp/style/txp_barrage.css?_=1523593955682">
+
+    <link rel="stylesheet" rev="stylesheet" type="text/css" media="screen" href="//qzonestyle.gtimg.cn/open_proj/slot-external.css">
     <script src="${PageContext.request.contextPath}/js/jquery-latest.min.js"></script>
     <script src="${PageContext.request.contextPath}/js/script.js"></script>
     <script src="${PageContext.request.contextPath}/js/jquery183.min.js"></script>
@@ -107,21 +114,60 @@
             <div id="main-content" class="col-2-3">
                 <div class="wrap-col">
                     <div class="wrap-content">
+
+
                         <c:forEach var="otherArticle" items="${otherArticle}">
-                            <article>
-                                <div class="col-1-3">
-                                    <img style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px" src="${PageContext.request.contextPath}/${otherArticle.showPic}" />
-                                </div>
-                                <div class="col-2-3">
-                                    <div class="art-content">
-                                        <a href="#"><h3>${otherArticle.title}</h3></a>
-                                        <div class="info">推送于：${otherArticle.createTime} </div>
-                                        <p>${otherArticle.content}</p>
-                                        <a class="button button02" href="#">MORE</a>
+                            <c:if test="${otherArticle.newType ==1}">
+
+                        <div class="Q-tpList" style="z-index: 98;"><div class="Q-tpWrap">
+                            <a target="_blank" class="pic" href="//new.qq.com/omn/20180416A0LSHF.html"><img class="picto" src="${otherArticle.imgSrc}" name=""></a>
+
+                            <div class="text">
+                            <em class="f14 l24"><a target="_blank" class="linkto" href="//new.qq.com/omn/20180416A0LSHF.html">${otherArticle.title}</a></em>
+                                <div >
+                                    <div class="info">
+                                        <span class="from">${otherArticle.author}</span><span class="keywords" style="display: inline;"><a href="http://news.qq.com/dc_column_article/TagsList.htm?tags=%E5%BE%AE%E4%BF%A1" target="_blank">微信</a></span>
                                     </div>
-                                </div>
-                            </article>
+
+                                    <div class="btns"><div class="shareBtn" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false" aria-label="分享"><ul class="shareBtn16" id="shares" style="display: none;">
+                                        <li class="jiantou">
+                                        </li><li class="shareButton" id="share2wb"><a href="javascript:void(0)" class="s_weibo" id="2" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">
+                                        腾讯微博
+                                    </a></li>
+                                        <li class="shareButton" id="share2qzone"><a href="javascript:void(0)" class="s_qzone" onclick="share2qzone.showPopup(this,'${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">QQ空间
+                                        </a></li>
+                                        <li class="shareButton" id="share2qq"><a href="javascript:void(0)" class="s_qq" onclick="share2qq.showPopup(this,'${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">QQ好友
+                                        </a></li>
+                                        <li id="share2sina" class="shareButton"><a href="javascript:void(0)" class="s_sina" onclick="share2sina('${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">新浪微博
+                                        </a></li>
+                                    </ul></div></div>
+                                 </div>
+                        </div>
+                        </div></div>
+
+                            </c:if>
+
                         </c:forEach>
+
+
+
+                            <%--<article>--%>
+                                <%--<div class="col-1-4">--%>
+                                    <%--<img style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px" src="${otherArticle.imgSrc}" />--%>
+                                <%--</div>--%>
+                                <%--<div class="col-3-4">--%>
+                                    <%--<div class="art-content">--%>
+                                        <%--<a href="#"><h3>${otherArticle.title}</h3></a>--%>
+                                        <%--<div class="info">推送于：${otherArticle.spiderDate} </div>--%>
+                                        <%--<p></p>--%>
+                                        <%--<a class="button button02" href="#">MORE</a>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                            <%--</article>--%>
+
+
+
+
                     </div>
                 </div>
             </div>

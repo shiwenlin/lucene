@@ -79,14 +79,6 @@ public class SpiderListener implements ServletContextListener {
                 }
 
                 NewInfo info = resultMap.get(url);
-
-                Article article = new Article();
-                article.setTitle(info.getTitle());
-                article.setUrl(urlNames);
-                article.setContent(contentBuilder.toString());
-                article.setAuthor(info.getAuthor());
-                article.setSpiderDate(new Date());
-
                 Map<String, Object> params = new HashMap<>();
                 params.put("url",urlNames);
                 List<Article> articles = articleService.getArticleList(params);
@@ -94,19 +86,41 @@ public class SpiderListener implements ServletContextListener {
                     continue;
                 }
 
-                int articleId = articleService.addArticle(article);
+
+                Article article = new Article();
+                article.setTitle(info.getTitle());
+                article.setUrl(urlNames);
+                article.setContent(contentBuilder.toString());
+                article.setAuthor(info.getAuthor());
+                article.setSpiderDate(new Date());
+                if (info.getNewType()){
+                    article.setNewType(1);
+                    article.setImgSrc(info.getImgSrc().toArray()[0].toString());
+                }else {
+                    article.setNewType(0);
+                    Object[] arr = info.getImgSrc().toArray();
+                    article.setImgSrc(arr[0].toString());
+                    article.setImgSrc2(arr[1].toString());
+                    article.setImgSrc3(arr[2].toString());
+                }
+
+
+                article.setKeywords(info.getKeywords());
+
+
+
+                long articleId = articleService.addArticle(article);
 
 
                 //保存索引
                 org.apache.lucene.document.Document document=new org.apache.lucene.document.Document();
-                document.add(new StringField("Id",String.valueOf(ios++), Field.Store.YES));
+                document.add(new StringField("Id",articleId+"", Field.Store.YES));
                 document.add(new TextField("title",info.getTitle(), Field.Store.YES));
                 document.add(new TextField("content",sb.toString().substring(0,100),Field.Store.YES));
                 document.add(new StringField("author",info.getAuthor(),Field.Store.YES));
                 document.add(new StringField("link",urlNames,Field.Store.YES));
                 document.add(new StringField("date",sdf.format(new Date()),Field.Store.YES));
-                document.add(new StringField("keyword",info.getKeywords(),Field.Store.YES));
-                document.add(new StringField("img",info.getImgSrc(),Field.Store.YES));
+
 
                 System.out.println("-------------------------------------------------");
                 System.out.println("新闻标题："+info.getTitle());
@@ -178,11 +192,16 @@ public class SpiderListener implements ServletContextListener {
 
         for (Element oneNew:onePicNews) {
             NewInfo newInfo = saveNewAsInfo(oneNew,"picto");
+            newInfo.setNewType(true);
             resultMap.put(newInfo.getUrl(),newInfo);
         }
 
         for (Element oneNew:threePicNews) {
             NewInfo newInfo = saveNewAsInfo(oneNew,"pic");
+            if (newInfo==null){
+                continue;
+            }
+            newInfo.setNewType(false);
             if (newInfo==null){ continue; }
             resultMap.put(newInfo.getUrl(),newInfo);
         }
@@ -207,14 +226,25 @@ public class SpiderListener implements ServletContextListener {
             if (picElements.size()==0){
                 return null;
             }
-            Element pic = picElements.get(0);
-            imgSrc = pic.getElementsByTag("img").attr("src");
-        }else{
-            Element pic = picElements.get(0);
-            imgSrc = pic.attr("src");
+            for (Element pic: picElements) {
+                imgSrc = pic.getElementsByTag("img").attr("src");
+                if ("".equals(imgSrc)){
+                    imgSrc = pic.getElementsByTag("img").attr("_src");
+                }
+                newInfo.getImgSrc().add(imgSrc);
+            }
+           // Element pic = picElements.get(0);
 
+        }else{
+
+            Element pic = picElements.get(0);
+            imgSrc = pic.attr("_src");
+            if ("".equals(imgSrc)){
+                imgSrc = pic.attr("src");
+            }
+            newInfo.getImgSrc().add(imgSrc);
         }
-        newInfo.setImgSrc(imgSrc);
+
 
         //标题element
         Elements titleElements = oneNew.getElementsByClass("linkto");

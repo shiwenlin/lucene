@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,8 @@ import java.util.Map;
 @Component
 public interface ArticleMapper {
 
-    @Insert("insert into articles (title,content,author,url,spider_date) values (#{title},#{content},#{author},#{url},#{spiderDate})")
+    @Insert("insert into articles (title,content,author,keyword,img_src,img_src2,img_src3,url,spider_date,new_type) " +
+            "values (#{title},#{content},#{author},#{keywords},#{imgSrc},#{imgSrc2},#{imgSrc3},#{url},#{spiderDate},#{newType})")
     @Options(useGeneratedKeys = true, keyProperty = "Id")
     public int add(Article article);
 
@@ -34,6 +36,15 @@ public interface ArticleMapper {
 
 
     @SelectProvider(type = ArticleSqlBuilder.class, method = "queryArticleByParams")
+    @Results(id = "b", value = {
+            @Result(column = "id", property = "id", javaType = Long.class),
+            @Result(property = "spiderDate", column = "spider_date", javaType = Date.class),
+            @Result(property = "keywords", column = "keyword", javaType = String.class),
+            @Result(property = "imgSrc", column = "img_src", javaType = String.class),
+            @Result(property = "imgSrc2", column = "img_src2", javaType = String.class),
+            @Result(property = "imgSrc3", column = "img_src3", javaType = String.class),
+            @Result(property = "newType", column = "new_type", javaType = Integer.class)
+    })
     List<Article> queryArticleList(Map<String, Object> params);
 
 
@@ -53,6 +64,19 @@ public interface ArticleMapper {
             if(!StringUtils.isBlank((String)params.get("url"))){
                 sql.append(" and url = '").append((String)params.get("url")).append("' ");
             }
+
+            sql.append(" order by spider_date desc ");
+
+            /*
+            添加分页逻辑  传入相应参数才会分页查询
+             */
+            if (params.get("start")!=null){
+                sql.append("limit ").append(params.get("start"));
+            }
+            if (params.get("pageSize")!=null){
+                sql.append(",").append(params.get("pageSize"));
+            }
+
             System.out.println("查询sql=="+sql.toString());
             return sql.toString();
         }

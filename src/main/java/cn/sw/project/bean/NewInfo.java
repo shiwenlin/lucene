@@ -1,10 +1,12 @@
 package cn.sw.project.bean;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NewInfo {
 
-    private String imgSrc;
+    private Set<String> imgSrc = new HashSet<>();
 
     private String title;
 
@@ -14,6 +16,27 @@ public class NewInfo {
 
     private String url;
 
+    /**
+     * 区分新闻类型  true:三图新闻  false:1图新闻
+     */
+    private Boolean newType;
+
+
+    public Set<String> getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(Set<String> imgSrc) {
+        this.imgSrc = imgSrc;
+    }
+
+    public Boolean getNewType() {
+        return newType;
+    }
+
+    public void setNewType(Boolean newType) {
+        this.newType = newType;
+    }
 
     public String getUrl() {
         return url;
@@ -23,13 +46,6 @@ public class NewInfo {
         this.url = url;
     }
 
-    public String getImgSrc() {
-        return imgSrc;
-    }
-
-    public void setImgSrc(String imgSrc) {
-        this.imgSrc = imgSrc;
-    }
 
     public String getTitle() {
         return title;
