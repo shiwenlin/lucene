@@ -16,7 +16,7 @@
     <!-- Basic Page Needs
   ================================================== -->
     <meta charset="utf-8">
-    <title>zSoccer</title>
+    <title>${article.title}</title>
     <meta name="description" content="">
 
 
@@ -89,34 +89,11 @@
                         <article>
                             <div class="art-header">
 
-                                <img src="${PageContext.request.contextPath}/images/slideshow-image1.jpg" />
+
                             </div>
                             <div class="art-content">
-                                <a href="#"><h3 style="font-size: 37px; line-height: 1.5;">Nam libero tempore, cum soluta nobis est </h3></a>
-                                <div class="info">Posted on June 22, 2010 in: <a href="#">Event</a></div>
-                                <div class="excerpt"><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum exercitation ullamco laboris nisi ut aliquip.</p></div>
-                                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
-                                <blockquote><p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet vultatup duista.</p></blockquote>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril.</p>
-                                <h2>Heading 1</h2>
-                                <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse lorem ipsum dolor sit amet.</p>
-                                <h2>Heading 2</h2>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. At vero eos et accusam et justo.</p>
-                                <h2>Heading 3</h2>
-                                <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum hendrerit in vulputate velit esse molestie.</p>
-                                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
-                                <p><code>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</code></p>
-                                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-                                <div class="note">
-                                    <ol>
-                                        <li>Lorem ipsum</li>
-                                        <li>Sit amet vultatup nonumy</li>
-                                        <li>Duista sed diam</li>
-                                    </ol>
-                                    <div class="clear"></div>
-                                </div>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-                                <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</p>
+                                <h1 style="text-align: center;margin-top: 14px;margin-bottom: 40px;" >${article.title}</h1>
+                                ${article.content}
                             </div>
                         </article>
                     </div>
@@ -165,19 +142,7 @@
                             </div>
                         </div>
                         <!---- Start Widget ---->
-                        <div class="widget wid-gallery">
-                            <div class="wid-header">
-                                <h5>Gallery</h5>
-                            </div>
-                            <div class="wid-content">
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/6.jpg"></a>
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/10.jpg"></a>
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/9.jpg"></a>
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/8.jpg"></a>
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/7.jpg"></a>
-                                <a href="#"><img src="${PageContext.request.contextPath}/images/6.jpg"></a>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>

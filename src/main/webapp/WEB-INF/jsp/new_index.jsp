@@ -17,7 +17,7 @@
     <!-- Basic Page Needs
   ================================================== -->
     <meta charset="utf-8">
-    <title>zSoccer</title>
+    <title>在线新闻</title>
     <meta name="description" content="">
 
 
@@ -47,6 +47,7 @@
     <script src="${PageContext.request.contextPath}/js/script.js"></script>
     <script src="${PageContext.request.contextPath}/js/jquery183.min.js"></script>
     <script src="${PageContext.request.contextPath}/js/responsiveslides.min.js"></script>
+    <link rel="stylesheet" href="http://mat1.gtimg.com/news/vv/styles/news-video.css">
     <script>
         // You can also use "$(window).load(function() {"
         $(function () {
@@ -64,7 +65,101 @@
                     $('.events').append("<li>after event fired.</li>");
                 }
             });
+
+            $("#loadmore").click(function () {
+                var start = $("#pagesize").val();
+                console.log(start);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/loadmore",
+                    data: "start=" + start,
+                    success: function(r){
+                        if(r.code === 200){
+
+                            var newArr = r.result;
+
+                            for(var i = 0;i<newArr.length;i++){
+
+
+                                if (newArr[i].newType==1){
+                                    var newDiv = document.createElement("div");
+                                    newDiv.setAttribute("style","z-index: 98;margin-bottom: 5px;");
+                                    $(".wrap-content")[0].insertBefore(newDiv,$(".wrap-content").children()[start]);
+                                    newDiv.setAttribute("class","Q-tpList");
+                                    newDiv.innerHTML = "<div class=\"Q-tpWrap\">\n" +
+                                        "                            <a target=\"_blank\" class=\"pic\" href='"+newArr[i].url+"'><img class=\"picto\" src='"+newArr[i].imgSrc+"' name=\"\"></a>\n" +
+                                        "\n" +
+                                        "                            <div class=\"text\">\n" +
+                                        "                            <em class=\"f14 l24\"><a target=\"_blank\" class=\"linkto\" href='"+newArr[i].url+"'>"+newArr[i].title+"</a></em>\n" +
+                                        "                                <div >\n" +
+                                        "                                    <div class=\"info\" style=\"margin-top: 75px;\">\n" +
+                                        "                                        <span >"+newArr[i].author+"</span>&nbsp;&nbsp;&nbsp;&nbsp;\n" +
+                                        "                                        <span class=\"keywords\" style=\"display: inline;\">\n" +
+                                        "                                                "+newArr[i].keywords +"  \n" +
+                                        "                                        </span>\n" +
+                                        "                                    </div>\n" +
+                                        "\n" +
+                                        "                                    <div class=\"info\" style=\"margin-top: 0px;\">\n" +
+                                        "                                        <hr style=\"height:1px;border:none;border-top:1px dashed #0066CC;\"/>\n" +
+                                        "                                    </div>\n" +
+                                        "\n" +
+                                        "                                 </div>\n" +
+                                        "                        </div>\n" +
+                                        "                        </div>"
+
+
+                                }else{
+                                    var newDiv = document.createElement("div");
+                                    newDiv.setAttribute("style","z-index: 96;margin-bottom: 5px;");
+                                    $(".wrap-content")[0].insertBefore(newDiv,$(".wrap-content").children()[start]);
+                                    newDiv.setAttribute("class","Q-pList");
+                                    newDiv.innerHTML ="<div class=\"content\">\n" +
+                                        "                                        <em><a target=\"_blank\" style=\"font-size: 18px;margin-bottom: 5px;\" class=\"linkto\" href='"+newArr[i].url+"'>"+newArr[i].title+"</a></em>\n" +
+                                        "\n" +
+                                        "                                        <ul>\n" +
+                                        "                                            <li class=\"pic\"><a target=\"_blank\" href=\"\"><img src='"+newArr[i].imgSrc+"' name=\"\"></a></li>\n" +
+                                        "                                            <li class=\"pic\"><a target=\"_blank\" href=\"\"><img src='"+newArr[i].imgSrc2+"' name=\"\"></a></li>\n" +
+                                        "                                            <li class=\"pic\"><a target=\"_blank\" href=\"\"><img src='"+newArr[i].imgSrc3+"' name=\"\"></a></li>\n" +
+                                        "                                        </ul>\n" +
+                                        "\n" +
+                                        "                                        <div >\n" +
+                                        "                                            <div class=\"info\" style=\"margin-top: 5px;\">\n" +
+                                        "                                                <span class=\"from\">"+newArr[i].author+"</span>\n" +
+                                        "                                                &nbsp;&nbsp;&nbsp;&nbsp;\n" +
+                                        "                                                <span class=\"keywords\" style=\"display: inline;\">"+newArr[i].keywords+"</span>\n" +
+                                        "                                            </div>\n" +
+                                        "\n" +
+                                        "                                            <div class=\"info\" style=\"margin-top: 0px;\">\n" +
+                                        "                                                <hr style=\"height:1px;border:none;border-top:1px dashed #0066CC;\"/>\n" +
+                                        "                                            </div>\n" +
+                                        "\n" +
+                                        "                                        </div>\n" +
+                                        "\n" +
+                                        "\n" +
+                                        "                                    </div>";
+
+                                }
+
+                                start++;
+
+                            }
+
+
+                            $("#pagesize").val(start);
+
+                        }else{
+                            alert("加载数据失败，请刷新页面后重试");
+                        }
+                    }
+                });
+
+            });
         });
+
+
+
+
     </script>
 
 
@@ -113,42 +208,73 @@
         <div class="wrap-container zerogrid">
             <div id="main-content" class="col-2-3">
                 <div class="wrap-col">
+                    <input type="hidden" id="pagesize" value="10"/>
                     <div class="wrap-content">
 
 
                         <c:forEach var="otherArticle" items="${otherArticle}">
                             <c:if test="${otherArticle.newType ==1}">
 
-                        <div class="Q-tpList" style="z-index: 98;"><div class="Q-tpWrap">
-                            <a target="_blank" class="pic" href="//new.qq.com/omn/20180416A0LSHF.html"><img class="picto" src="${otherArticle.imgSrc}" name=""></a>
+                        <div class="Q-tpList" style="z-index: 98;margin-bottom: 5px;">
+                            <div class="Q-tpWrap">
+                            <a target="_blank" class="pic" href="${pageContext.request.contextPath}/detail/${otherArticle.id}"><img class="picto" src="${otherArticle.imgSrc}" name=""></a>
 
                             <div class="text">
-                            <em class="f14 l24"><a target="_blank" class="linkto" href="//new.qq.com/omn/20180416A0LSHF.html">${otherArticle.title}</a></em>
+                            <em class="f14 l24"><a target="_blank" class="linkto" href="${pageContext.request.contextPath}/detail/${otherArticle.id}">${otherArticle.title}</a></em>
                                 <div >
-                                    <div class="info">
-                                        <span class="from">${otherArticle.author}</span><span class="keywords" style="display: inline;"><a href="http://news.qq.com/dc_column_article/TagsList.htm?tags=%E5%BE%AE%E4%BF%A1" target="_blank">微信</a></span>
+                                    <div class="info" style="margin-top: 75px;">
+                                        <span >${otherArticle.author}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="keywords" style="display: inline;">
+                                                ${otherArticle.keywords}
+                                        </span>
                                     </div>
 
-                                    <div class="btns"><div class="shareBtn" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false" aria-label="分享"><ul class="shareBtn16" id="shares" style="display: none;">
-                                        <li class="jiantou">
-                                        </li><li class="shareButton" id="share2wb"><a href="javascript:void(0)" class="s_weibo" id="2" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">
-                                        腾讯微博
-                                    </a></li>
-                                        <li class="shareButton" id="share2qzone"><a href="javascript:void(0)" class="s_qzone" onclick="share2qzone.showPopup(this,'${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">QQ空间
-                                        </a></li>
-                                        <li class="shareButton" id="share2qq"><a href="javascript:void(0)" class="s_qq" onclick="share2qq.showPopup(this,'${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">QQ好友
-                                        </a></li>
-                                        <li id="share2sina" class="shareButton"><a href="javascript:void(0)" class="s_sina" onclick="share2sina('${otherArticle.title}','${otherArticle.url}','${otherArticle.imgSrc}')" role="button" tabindex="0" aria-haspopup="true" aria-pressed="false">新浪微博
-                                        </a></li>
-                                    </ul></div></div>
+                                    <div class="info" style="margin-top: 0px;">
+                                        <hr style="height:1px;border:none;border-top:1px dashed #0066CC;"/>
+                                    </div>
+
                                  </div>
                         </div>
                         </div></div>
 
                             </c:if>
 
+                            <c:if test="${otherArticle.newType ==0}">
+                                <div class="Q-pList" style="z-index: 96;">
+                                    <div class="content">
+                                        <em><a target="_blank" style="font-size: 18px;margin-bottom: 5px;" class="linkto" href="${pageContext.request.contextPath}/detail/${otherArticle.id}">${otherArticle.title}</a></em>
+
+                                        <ul>
+                                            <li class="pic"><a target="_blank" href="${pageContext.request.contextPath}/detail/${otherArticle.id}"><img src="${otherArticle.imgSrc}" name=""></a></li>
+                                            <li class="pic"><a target="_blank" href="${pageContext.request.contextPath}/detail/${otherArticle.id}"><img src="${otherArticle.imgSrc2}" name=""></a></li>
+                                            <li class="pic"><a target="_blank" href="${pageContext.request.contextPath}/detail/${otherArticle.id}"><img src="${otherArticle.imgSrc3}" name=""></a></li>
+                                        </ul>
+
+                                        <div >
+                                            <div class="info" style="margin-top: 5px;">
+                                                <span class="from">${otherArticle.author}</span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span class="keywords" style="display: inline;">${otherArticle.keywords}</span>
+                                            </div>
+
+                                            <div class="info" style="margin-top: 0px;">
+                                                <hr style="height:1px;border:none;border-top:1px dashed #0066CC;"/>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </c:if>
+
                         </c:forEach>
 
+
+                        <div style="height: 36px;font-size: large;text-align: center;background-color: gainsboro;">
+                            <a  href="javascript:;" id="loadmore"  title="点击查看更多"  class="more">点击查看更多</a>
+                        </div>
 
 
                             <%--<article>--%>
@@ -195,24 +321,20 @@
                                 </div>
                                 <div class="bd bd2">
                                     <ol class="current">
-                                        <li>
-                                            <span class="topRank">1</span><a target="_blank" href="http://society.qq.com/a/20180404/000132.htm">全国多地遭“断崖式”降温 局地气温骤降20至28℃</a>
-                                        </li>
-                                        <li>
-                                            <span class="topRank">2</span><a target="_blank" href="http://society.qq.com/a/20180405/000467.htm">陕西15岁智力障碍少年被害 嫌疑人被抓有精神病史</a>
-                                        </li>
-                                        <li>
-                                            <span class="topRank">3</span><a target="_blank" href="http://society.qq.com/a/20180405/001455.htm">黑客侵入上牌系统盗取1500万副号牌 涉及24省份</a>
-                                        </li>
-                                        <li>
-                                            <span>4</span><a target="_blank" href="http://society.qq.com/a/20180404/026278.htm">湖南一盗窃嫌疑人被刑讯逼供致死，派出所副所长一审获刑十年</a>
-                                        </li>
-                                        <li>
-                                            <span>5</span><a target="_blank" href="http://society.qq.com/a/20180404/025457.htm">衡水警方回应“执勤人员抱石头砸人”：已停职并成立调查组</a>
-                                        </li>
-                                        <li>
-                                            <span>6</span><a target="_blank" href="http://society.qq.com/a/20180405/000556.htm">封建迷信殡葬用品花样翻新 “冥府户口本”等证照齐全</a>
-                                        </li>
+                                        <c:forEach var="title" items="${titles}" varStatus="st">
+                                            <c:if test="${st.count < 4}">
+                                                <li>
+                                                    <span class="topRank">${st.count}</span><a target="_blank" href="${title.url}">${title.title}</a>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${st.count >= 4}">
+                                                <li>
+                                                    <span >${st.count}</span><a target="_blank" href="${title.url}">${title.title}</a>
+                                                </li>
+                                            </c:if>
+
+                                         </c:forEach>
+
                                     </ol>
                                 </div>
 

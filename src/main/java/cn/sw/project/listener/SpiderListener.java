@@ -1,15 +1,20 @@
 package cn.sw.project.listener;
 
 import cn.sw.project.bean.Article;
+import cn.sw.project.bean.HotTitle;
+import cn.sw.project.bean.HotWord;
 import cn.sw.project.bean.NewInfo;
+import cn.sw.project.dao.HotTitleMapper;
 import cn.sw.project.lucene.LuceneDao;
 import cn.sw.project.service.ArticleService;
+import cn.sw.project.service.HotWordService;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletContextEvent;
@@ -31,8 +36,50 @@ public class SpiderListener implements ServletContextListener {
     @Autowired
     ArticleService articleService;
 
+    @Autowired
+    HotWordService hotWordService;
+
+    @Autowired
+    HotTitleMapper hotTitleMapper;
+
+
+
+    /**
+     *
+     * String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
+     Document doc = Jsoup.parse(html);//解析HTML字符串返回一个Document实现
+     Element link = doc.select("a").first();//查找第一个a元素
+
+     String text = doc.body().text(); // "An example link"//取得字符串中的文本
+     String linkHref = link.attr("href"); // "http://example.com/"//取得链接地址
+     String linkText = link.text(); // "example""//取得链接地址中的文本
+
+     String linkOuterH = link.outerHtml();
+     // "<a href="http://example.com"><b>example</b></a>"
+     String linkInnerH = link.html(); // "<b>example</b>"//取得链接内的html内容
+     *
+     *
+     * @param servletContextEvent
+     */
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent)  {
+        /*
+        从数据库查询出所有关键词 封装进map中
+         */
+        Map<String,Integer> keyword = new HashMap<>();
+        Map<String,Object> p = new HashMap<>();
+        List<HotWord> words = hotWordService.getHotWrods(p);
+        for (HotWord word: words) {
+            String w = word.getKeyword();
+            if (keyword.containsKey(w)){
+                int count = keyword.get(w);
+                count++;
+                keyword.put(w,count);
+            }else{
+                keyword.put(word.getKeyword(),word.getNum());
+            }
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -104,6 +151,16 @@ public class SpiderListener implements ServletContextListener {
                     article.setImgSrc3(arr[2].toString());
                 }
 
+                String[] keywords = info.getKeywords().split(";");
+                for (String k :keywords){
+                    if (keyword.containsKey(k)){
+                        int count = keyword.get(k);
+                        count++;
+                        keyword.put(k,count);
+                    }else{
+                        keyword.put(k,1);
+                    }
+                }
 
                 article.setKeywords(info.getKeywords());
 
@@ -133,6 +190,29 @@ public class SpiderListener implements ServletContextListener {
 
                 //按行读取并打印
                 luceneDao.addIndex(document);
+
+            }
+
+
+            Set<Map.Entry<String,Integer>> entries = keyword.entrySet();
+            Iterator<Map.Entry<String,Integer>>  it = entries.iterator();
+            while (it.hasNext()){
+                Map.Entry<String,Integer> result = it.next();
+                String key = result.getKey();
+                Integer values = result.getValue();
+                Map<String,Object> param = new HashMap<>();
+                param.put("keyword",key);
+                List<HotWord> h = hotWordService.getHotWrods(param);
+                if (h!=null&&h.size()>0){
+                    //更新
+                    hotWordService.updateHotWord(values,key);
+                }else{
+                    //插入
+                    HotWord hotWord = new HotWord();
+                    hotWord.setNum(values);
+                    hotWord.setKeyword(key);
+                    hotWordService.addHotWord(hotWord);
+                }
 
             }
 
@@ -171,6 +251,29 @@ public class SpiderListener implements ServletContextListener {
     }
 
 
+    private void saveHot(Document docs){
+        Elements elements = docs.getElementsByClass("current");
+        Element element = elements.get(1);
+        List<Node> nodes = element.childNodes();
+        Map<String,Object> param = new HashMap<>();
+        for (Node node:  nodes) {
+            if (node instanceof Element){
+                String hotTitle = ((Element) node).getElementsByTag("a").text();
+                String url = ((Element) node).getElementsByTag("a").attr("href");
+
+                param.put("title",hotTitle);
+                List<HotTitle> titles = hotTitleMapper.queryHotTitleList(param);
+                if (titles==null || titles.size()==0){
+                    HotTitle hotTitle1 = new HotTitle();
+                    hotTitle1.setTitle(hotTitle);
+                    hotTitle1.setCreateTime(new Date());
+                    hotTitle1.setUrl(url);
+                    hotTitleMapper.add(hotTitle1);
+                }
+            }
+        }
+    }
+
     /**
      * 给定腾信新闻的专题URL  然后连接，读取基本信息，保存至hashmap中
      * @param connectUrl 专题URL
@@ -184,6 +287,8 @@ public class SpiderListener implements ServletContextListener {
                 .maxBodySize(0)
                 .timeout(600000)
                 .get();
+
+        saveHot(docs);
 
         Elements onePicNews = docs.getElementsByClass("Q-tpList");
         Elements threePicNews = docs.getElementsByClass("Q-pList");

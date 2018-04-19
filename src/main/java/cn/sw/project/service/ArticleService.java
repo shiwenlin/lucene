@@ -10,4 +10,6 @@ public interface ArticleService {
     long addArticle(Article article);
 
     List<Article> getArticleList(Map<String, Object> params);
+
+    public Article getArticleById(Long id);
 }

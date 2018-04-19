@@ -22,6 +22,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Article getArticleById(Long id){
+        return articleMapper.queryArticleById(id);
+    }
+
+    @Override
     public List<Article> getArticleList(Map<String, Object> params) {
         return articleMapper.queryArticleList(params);
     }
