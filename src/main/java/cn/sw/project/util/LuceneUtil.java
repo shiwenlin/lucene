@@ -20,16 +20,16 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 
 /**
- * lucene ¹¤¾ßÀà£¬ÓÃÓÚ»ñÈ¡»ñÈ¡²Ù×÷Ë÷ÒıµÄ¶ÔÏó¡£
- * @ ×÷Õß zhuwu@itcast.cn
+ * lucene å·¥å…·ç±»ï¼Œç”¨äºè·å–è·å–æ“ä½œç´¢å¼•çš„å¯¹è±¡ã€‚
+ * @ ä½œè€… 
  *
  */
 public class LuceneUtil {
-	//Ë÷Òı¿âµÄÅäÖÃĞÅÏ¢,µ±Ç°°æ±¾£¬Ê¹ÓÃµÄ·Ö´ÊÆ÷
+	//ç´¢å¼•åº“çš„é…ç½®ä¿¡æ¯,å½“å‰ç‰ˆæœ¬ï¼Œä½¿ç”¨çš„åˆ†è¯å™¨
 	private static IndexWriterConfig indexWriterConfig;
-	//Ö¸¶¨·Ö´Ê...
-	private static Analyzer analyzer=new IKAnalyzer();//Ê¹ÓÃ´Ê¿â·Ö´Ê...
-	//Ë÷Òı´æ·ÅµÄÄ¿Â¼
+	//æŒ‡å®šåˆ†è¯...
+	private static Analyzer analyzer=new IKAnalyzer();//ä½¿ç”¨è¯åº“åˆ†è¯...
+	//ç´¢å¼•å­˜æ”¾çš„ç›®å½•
 	private static Directory directory;
 	private static File file=new File(cn.sw.project.util.Constants.file);
 	static{
@@ -43,7 +43,7 @@ public class LuceneUtil {
 		
 	}
 	/**
-	 * »ñÈ¡·Ö´ÊÆ÷....
+	 * è·å–åˆ†è¯å™¨....
 	 * @return
 	 */
 	public static Analyzer getAnalyzer(){
@@ -51,7 +51,7 @@ public class LuceneUtil {
 		return analyzer;
 	}
 	/**
-	 * »ñÈ¡Ë÷Òı²Ù×÷¶ÔÏó¡£¡£¡£
+	 * è·å–ç´¢å¼•æ“ä½œå¯¹è±¡ã€‚ã€‚ã€‚
 	 * @return
 	 */
 	public static  IndexWriter getIndexWriter(){
@@ -65,7 +65,7 @@ public class LuceneUtil {
 		
 	}
 	/**
-	 * »ñÈ¡Ë÷Òı¶ÁÈ¡¶ÔÏó¡£¡£¡£
+	 * è·å–ç´¢å¼•è¯»å–å¯¹è±¡ã€‚ã€‚ã€‚
 	 * @return
 	 * @throws IOException
 	 */
@@ -82,7 +82,7 @@ public class LuceneUtil {
 		return indexSearcher;
 	}
 	/**
-	 * ¹Ø±Õ²Ù×÷Ë÷ÒıµÄ¶ÔÏó
+	 * å…³é—­æ“ä½œç´¢å¼•çš„å¯¹è±¡
 	 * @param indexWriter
 	 */
 	public static void closeIndexWriter(IndexWriter indexWriter) {
